@@ -1,0 +1,41 @@
+name: Manga Batch Downloader
+on:
+  workflow_dispatch:
+    inputs:
+      manga_url:
+        description: 'رابط فصل البداية'
+        required: true
+      start_ch:
+        description: 'من فصل رقم'
+        required: true
+        default: '1'
+      end_ch:
+        description: 'إلى فصل رقم'
+        required: true
+        default: '100'
+
+jobs:
+  download_job:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      
+      - name: Install Tools
+        run: |
+          pip install seleniumbase pillow requests
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
+
+      - name: Run
+        run: python downloader.py "${{ github.event.inputs.manga_url }}" "${{ github.event.inputs.start_ch }}" "${{ github.event.inputs.end_ch }}"
+
+      - name: Upload Bundles
+        uses: actions/upload-artifact@v4
+        with:
+          name: manga-zip-bundles
+          path: ./downloads/*.zip
+          retention-days: 2
