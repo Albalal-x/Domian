@@ -1,24 +1,32 @@
 from seleniumbase import SB
 
 with SB(uc=True, test=True, locale_code="en") as sb:
-    url = "https://gitlab.com/users/sign_in"
-    sb.activate_cdp_mode(url)
-    sb.sleep(1)
+    url = "https://manga-starz.net/manga/"
 
+    sb.activate_cdp_mode(url)
+
+    # انتظار تحميل الصفحة
+    sb.sleep(3)
+
+    # محاولة حل Cloudflare / Turnstile captcha
     sb.uc_gui_click_captcha()
 
-    sb.assert_text("Username", '[for="user_login"]', timeout=3)
-    sb.assert_element('label[for="user_login"]')
+    # انتظار تجاوز التحقق
+    sb.sleep(3)
 
-    sb.highlight('button:contains("Sign in")')
-    sb.highlight('h1:contains("GitLab")')
+    # التأكد من تحميل الصفحة
+    sb.assert_element("body", timeout=10)
 
-    sb.post_message("SeleniumBase wasn't detected", duration=4)
+    # تمييز بعض العناصر
+    sb.highlight("a")
 
-    # طباعة كود HTML للصفحة
+    sb.post_message("Page Loaded Successfully", duration=4)
+
+    # استخراج HTML
     html = sb.get_page_source()
+
     print("\n===== PAGE HTML START =====\n")
     print(html)
     print("\n===== PAGE HTML END =====\n")
 
-    print("Success! Website did not detect SeleniumBase!")
+    print("Success! Page HTML extracted.")
