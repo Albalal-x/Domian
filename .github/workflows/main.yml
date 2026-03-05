@@ -1,0 +1,47 @@
+name: Manga Batch Downloader
+on:
+  workflow_dispatch:
+    inputs:
+      manga_url:
+        description: 'رابط فصل البداية (مثال: https://manga-starz.net/manga/slug/1)'
+        required: true
+        default: 'https://manga-starz.net/manga/doomsday-for-all-me-virus-monarch/1'
+      start_ch:
+        description: 'ابدأ من الفصل رقم'
+        required: true
+        default: '1'
+      end_ch:
+        description: 'انتهِ عند الفصل رقم'
+        required: true
+        default: '10'
+
+jobs:
+  download_job:
+    runs-on: ubuntu-latest
+    steps:
+      # تحديد جلب الكود من فرع master حصراً
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      
+      - name: Install SeleniumBase and Tools
+        run: |
+          pip install seleniumbase pillow requests
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
+
+      - name: Run Download Script
+        # تمرير المدخلات للسكربت
+        run: python downloader.py "${{ github.event.inputs.manga_url }}" "${{ github.event.inputs.start_ch }}" "${{ github.event.inputs.end_ch }}"
+
+      - name: Upload Zip Bundles
+        uses: actions/upload-artifact@v4
+        with:
+          name: manga-zip-bundles
+          path: ./downloads/*.zip
+          retention-days: 2
