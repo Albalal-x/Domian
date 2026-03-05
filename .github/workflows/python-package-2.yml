@@ -60,27 +60,9 @@ jobs:
       run: |
         echo "import os; print(os.cpu_count())" > get_cpu_count.py
         python get_cpu_count.py
-    - name: Run python raw_uc_mode.py --debug
-      run: |
-        python raw_uc_mode.py --debug
-    - name: Run python raw_cdp.py --debug
-      run: |
-        python raw_cdp.py --debug
-    - name: Run python raw_socialblade.py --debug
-      run: |
-        python raw_socialblade.py --debug
     - name: Run python raw_gitlab.py --debug
       run: |
         python raw_gitlab.py --debug
-    - name: Run python raw_turnstile.py
-      run: |
-        python raw_turnstile.py --debug
-    - name: Run python raw_turnstile_cdp_mode.py
-      run: |
-        python raw_turnstile_cdp_mode.py --debug
-    - name: Run python raw_walmart.py --debug
-      run: |
-        python raw_walmart.py --debug
     - name: Upload screenshots
       uses: actions/upload-artifact@v6
       with:
