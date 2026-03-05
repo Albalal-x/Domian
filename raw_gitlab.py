@@ -1,7 +1,7 @@
 from seleniumbase import SB
 
 with SB(uc=True, test=True, locale_code="en") as sb:
-    url = "https://manga-starz.net/manga/"
+    url = "https://arabshentai.com"
 
     sb.activate_cdp_mode(url)
 
